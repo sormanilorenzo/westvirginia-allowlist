@@ -459,86 +459,127 @@
                     }
                 }
                 
-                // Send data to webhook
-                const discordPayload = {
-                    embeds: [
-                        {
-                            title: "Nuovo Modulo Whitelist",
-                            color: 0x8d4a2e, // Rust color
-                            fields: [
-                                {
-                                    name: "🏷️ Nome IRL",
-                                    value: formData.nome_irl
-                                },
-                                {
-                                    name: "💬 Discord Tag",
-                                    value: formData.discord_tag
-                                },
-                                {
-                                    name: "📜 Esperienza Roleplay",
-                                    value: formData.esperienza_roleplay
-                                },
-                                {
-                                    name: "🤠 Nome e Cognome del Personaggio",
-                                    value: formData.nome_personaggio
-                                },
-                                {
-                                    name: "Età del Personaggio",
-                                    value: formData.eta_personaggio
-                                },
-                                {
-                                    name: "Luogo di Nascita",
-                                    value: formData.luogo_nascita
-                                },
-                                {
-                                    name: "Background",
-                                    value: formData.background.length > 1024 ? 
-                                        formData.background.substring(0, 1021) + "..." : 
-                                        formData.background
-                                },
-                                {
-                                    name: "Motivazione del Personaggio",
-                                    value: formData.motivazione
-                                },
-                                {
-                                    name: "Carattere e Personalità",
-                                    value: formData.personalita
-                                },
-                                {
-                                    name: "Punti di Forza",
-                                    value: formData.punti_forza
-                                },
-                                {
-                                    name: "Debolezze",
-                                    value: formData.debolezze
-                                }
-                            ],
-                            timestamp: new Date().toISOString()
+                // Funzione per suddividere testi lunghi
+                function splitText(text, maxLength = 1024) {
+                    const chunks = [];
+                    let remainingText = text;
+                    
+                    while (remainingText.length > 0) {
+                        if (remainingText.length <= maxLength) {
+                            chunks.push(remainingText);
+                            break;
                         }
-                    ]
-                };
-                
-                // If background is too long, send a second embed
-                if (formData.background.length > 1024) {
-                    const backgroundContinuation = formData.background.substring(1021);
-                    discordPayload.embeds.push({
-                        title: "Background (continuazione)",
-                        color: 0x8d4a2e,
-                        description: backgroundContinuation
-                    });
+                        
+                        // Trova un punto logico dove dividere (spazio, punto, virgola)
+                        let splitIndex = remainingText.lastIndexOf(' ', maxLength);
+                        if (splitIndex === -1) splitIndex = maxLength;
+                        
+                        chunks.push(remainingText.substring(0, splitIndex));
+                        remainingText = remainingText.substring(splitIndex).trim();
+                    }
+                    
+                    return chunks;
                 }
                 
-                // Send data to webhook
-                fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(discordPayload)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // Show success message
+                // Array di payload per gestire tutti i contenuti
+                const payloads = [];
+                
+                // Primo payload con informazioni principali
+                const mainPayload = {
+                    embeds: [{
+                        title: "Nuovo Modulo Whitelist",
+                        color: 0x8d4a2e, // Rust color
+                        fields: [
+                            { name: "🏷️ Nome IRL", value: formData.nome_irl },
+                            { name: "💬 Discord Tag", value: formData.discord_tag },
+                            { name: "📜 Esperienza Roleplay", value: formData.esperienza_roleplay.length > 1024 ? 
+                                formData.esperienza_roleplay.substring(0, 1000) + "... (continua)" : 
+                                formData.esperienza_roleplay 
+                            },
+                            { name: "🤠 Nome e Cognome del Personaggio", value: formData.nome_personaggio },
+                            { name: "Età del Personaggio", value: formData.eta_personaggio },
+                            { name: "Luogo di Nascita", value: formData.luogo_nascita }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+                
+                payloads.push(mainPayload);
+                
+                // Gestione campi potenzialmente lunghi
+                const longFields = [
+                    { name: "Background", value: formData.background },
+                    { name: "Motivazione del Personaggio", value: formData.motivazione },
+                    { name: "Carattere e Personalità", value: formData.personalita },
+                    { name: "Punti di Forza", value: formData.punti_forza },
+                    { name: "Debolezze", value: formData.debolezze }
+                ];
+                
+                // Se l'esperienza roleplay era troppo lunga, aggiungi il resto
+                if (formData.esperienza_roleplay.length > 1024) {
+                    const chunks = splitText(formData.esperienza_roleplay, 1500);
+                    if (chunks.length > 1) {
+                        payloads.push({
+                            embeds: [{
+                                title: "Esperienza Roleplay (continuazione)",
+                                color: 0x8d4a2e,
+                                description: chunks.slice(1).join("\n\n")
+                            }]
+                        });
+                    }
+                }
+                
+                // Crea embed per ogni campo lungo
+                longFields.forEach(field => {
+                    const chunks = splitText(field.value, 1500);
+                    
+                    if (chunks.length === 1) {
+                        // Se è abbastanza corto, aggiungilo all'ultimo payload
+                        if (payloads[payloads.length - 1].embeds[0].fields && 
+                            payloads[payloads.length - 1].embeds[0].fields.length < 10) {
+                            payloads[payloads.length - 1].embeds[0].fields.push({
+                                name: field.name,
+                                value: field.value
+                            });
+                        } else {
+                            // Altrimenti crea un nuovo payload
+                            payloads.push({
+                                embeds: [{
+                                    title: field.name,
+                                    color: 0x8d4a2e,
+                                    description: field.value
+                                }]
+                            });
+                        }
+                    } else {
+                        // Per testi molto lunghi, crea più payload
+                        payloads.push({
+                            embeds: [{
+                                title: field.name,
+                                color: 0x8d4a2e,
+                                description: chunks[0]
+                            }]
+                        });
+                        
+                        // Se ci sono altri chunk, aggiungi embed continuazione
+                        if (chunks.length > 1) {
+                            for (let i = 1; i < chunks.length; i++) {
+                                payloads.push({
+                                    embeds: [{
+                                        title: `${field.name} (continuazione ${i})`,
+                                        color: 0x8d4a2e,
+                                        description: chunks[i]
+                                    }]
+                                });
+                            }
+                        }
+                    }
+                });
+                
+                // Funzione per inviare i payload in sequenza
+                async function sendPayloads(index = 0) {
+                    if (index >= payloads.length) {
+                        // Tutti i payload sono stati inviati
                         backgroundForm.classList.remove('active');
                         successMessage.classList.add('active');
                         
@@ -546,14 +587,34 @@
                         document.querySelectorAll('input, textarea').forEach(input => {
                             input.value = '';
                         });
-                    } else {
+                        return;
+                    }
+                    
+                    try {
+                        const response = await fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(payloads[index])
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Errore HTTP: ${response.status}`);
+                        }
+                        
+                        // Attendi un momento per evitare rate limiting
+                        setTimeout(() => {
+                            sendPayloads(index + 1);
+                        }, 500);
+                    } catch (error) {
+                        console.error('Errore:', error);
                         alert('Si è verificato un errore durante l\'invio. Per favore, riprova più tardi.');
                     }
-                })
-                .catch(error => {
-                    console.error('Errore:', error);
-                    alert('Si è verificato un errore durante l\'invio. Per favore, riprova più tardi.');
-                });
+                }
+                
+                // Inizia l'invio sequenziale
+                sendPayloads();
             });
             
             // Reset form

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>West Virginia RP - Whitelist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-wood: #5d4037;
+            --color-wood-dark: #3e2723;
+            --color-paper: #f5e9d6;
+            --color-paper-dark: #d7cba9;
+            --color-rust: #8d4a2e;
+            --color-gold: #b8860b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Special Elite', cursive;
+            background-color: var(--color-wood);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23331a00' fill-opacity='0.1'/%3E%3Cpath d='M10 10h10v10H10zm30 0h10v10H40zm30 0h10v10H70zM10 40h10v10H10zm30 0h10v10H40zm30 0h10v10H70zM10 70h10v10H10zm30 0h10v10H40zm30 0h10v10H70z' fill='%23331a00' fill-opacity='0.2'/%3E%3C/svg%3E");
+            color: #422b15;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Rye', cursive;
+            color: var(--color-gold);
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 15px 0;
+        }
+
+        .wood-frame {
+            background-color: var(--color-wood);
+            border: 15px solid var(--color-wood-dark);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            position: relative;
+            padding: 5px;
+        }
+
+        .wood-frame:before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #8b4513;
+            pointer-events: none;
+        }
+
+        .paper-bg {
+            background-color: var(--color-paper);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d7cba9' fill-opacity='0.2'/%3E%3C/svg%3E");
+            border: 8px solid var(--color-paper-dark);
+            border-radius: 5px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .paper-bg:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23a67c52' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wanted-poster {
+            border: 2px dashed #8b4513;
+            border-radius: 0;
+            padding: 20px;
+            background-color: var(--color-paper);
+            position: relative;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wanted-poster:before {
+            content: "TELEGRAM";
+            font-family: 'Rye', cursive;
+            font-size: 2.0rem;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-paper);
+            padding: 0 15px;
+            color: var(--color-rust);
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #8b4513;
+            border-radius: 4px;
+            background-color: var(--color-paper-dark);
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #422b15;
+        }
+
+        .button {
+            font-family: 'Rye', cursive;
+            background: linear-gradient(to bottom, var(--color-rust), #693621);
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 0 #000;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        .button:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-button {
+            background: linear-gradient(to bottom, #a77336, #7c541c);
+            font-size: 1.4rem;
+            padding: 15px 30px;
+            display: block;
+            margin: 30px auto;
+            width: auto;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .telegram {
+            background-color: #ffefc1;
+            border: 3px solid #dac89b;
+            padding: 20px;
+            position: relative;
+            text-align: center;
+            font-family: 'Special Elite', cursive;
+            max-width: 600px;
+            margin: 50px auto 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .telegram:before {
+            content: "TELEGRAM";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffefc1;
+            padding: 0 15px;
+            font-family: 'Rye', cursive;
+            color: #422b15;
+            font-size: 1.2rem;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .important-note {
+            background-color: rgba(138, 82, 33, 0.1);
+            border-left: 5px solid var(--color-rust);
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .important-note strong {
+            color: var(--color-rust);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #f5e9d6;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .paper-bg {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WEST VIRGINIA</h1>
+            <h2>Modulo di Whitelist</h2>
+        </div>
+
+        <!-- Initial Form -->
+        <div id="initialForm" class="form-section active">
+            <div class="wood-frame">
+                <div class="wanted-poster">
+                    <h3>INFORMAZIONI INIZIALI</h3>
+                    <div class="field-group">
+                        <label for="realName">🏷️ Nome IRL:</label>
+                        <input type="text" id="realName" placeholder="Inserisci il tuo nome reale" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="discordTag">💬 Discord Tag:</label>
+                        <input type="text" id="discordTag" placeholder="Il tuo tag Discord" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="rpExperience">📜 Esperienza Roleplay:</label>
+                        <textarea id="rpExperience" placeholder="Descrivi la tua esperienza nel roleplay..." required></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label for="charName">🤠 Nome e Cognome del Personaggio:</label>
+                        <input type="text" id="charName" placeholder="Nome e cognome del tuo personaggio" required>
+                    </div>
+                    <button id="nextFormBtn" class="button">Modulo Successivo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Form -->
+        <div id="backgroundForm" class="form-section">
+            <div class="wood-frame">
+                <div class="paper-bg">
+                    <h2>BACKGROUND DEL PERSONAGGIO</h2>
+                    
+                    <div class="section">
+                        <h3>INFORMAZIONI GENERALI</h3>
+                        <div class="field-group">
+                            <label for="charFullName">🔘 Nome e Cognome del Personaggio:</label>
+                            <input type="text" id="charFullName" placeholder="Inserisci il nome completo del tuo personaggio" required>
+                        </div>
+                        <div class="field-group">
+                            <label for="charAge">🔘 Età del Personaggio:</label>
+                            <input type="text" id="charAge" placeholder="Quanti anni ha il tuo personaggio?" required>
+                        </div>
+                        <div class="field-group">
+                            <label for="birthplace">🔘 Luogo di Nascita:</label>
+                            <input type="text" id="birthplace" placeholder="Indica dove è nato il tuo personaggio" required>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>STORIA PERSONALE</h3>
+                        <div class="field-group">
+                            <label for="background">🔘 Background:</label>
+                            <textarea id="background" placeholder="Racconta chi è il tuo personaggio, la sua storia, le sue esperienze e cosa lo ha portato a West Virginia. Cerca di essere dettagliato e coerente con l'ambientazione" required></textarea>
+                        </div>
+                        
+                        <div class="important-note">
+                            <strong>❗ IMPORTANTE! ❗</strong>
+                            <p>Per scrivere un background coerente con la Lore, vi chiediamo gentilmente di specificare come il vostro personaggio sia arrivato in West Virginia. Se il vostro personaggio è nato in una delle città già presenti nel gioco, assicuratevi di rispettare gli avvenimenti narrati nella lore ufficiale. In ogni caso, tutti i personaggi dovranno arrivare a Valentine.</p>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label for="motivation">🔘 Motivazione del Personaggio:</label>
+                            <textarea id="motivation" placeholder="Qual è l'obiettivo del tuo personaggio? Quali sono le sue ambizioni o il suo scopo principale nella vita?" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>ASPETTI DEL PERSONAGGIO</h3>
+                        <div class="field-group">
+                            <label for="personality">🔘 Carattere e Personalità:</label>
+                            <textarea id="personality" placeholder="Descrivi il carattere del tuo personaggio: è altruista, egoista, calmo, aggressivo? Come interagisce con gli altri?" required></textarea>
+                        </div>
+                        <div class="field-group">
+                            <label for="strengths">🔘 Punti di Forza:</label>
+                            <textarea id="strengths" placeholder="Quali sono le abilità o i punti di forza del tuo personaggio?" required></textarea>
+                        </div>
+                        <div class="field-group">
+                            <label for="weaknesses">🔘 Debolezze:</label>
+                            <textarea id="weaknesses" placeholder="Quali sono i limiti o le difficoltà che il tuo personaggio potrebbe affrontare?" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <button id="submitBtn" class="button submit-button">Invia il Modulo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="form-section">
+            <div class="telegram">
+                <h3>MODULO INVIATO CON SUCCESSO!</h3>
+                <p>Il tuo modulo di whitelist è stato ricevuto. Se la tua candidatura sarà approvata, verrai contattato dallo staff di West Virginia.</p>
+                <p>Grazie per il tuo interesse!</p>
+                <button id="newFormBtn" class="button">Compila un Nuovo Modulo</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 West Virginia Roleplay Server - Tutti i diritti riservati
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Imposta qui il tuo webhook fisso
+            const webhookUrl = "https://discord.com/api/webhooks/1345731964493238353/YMpSFbr3GfRv8o1kbBRKOlLW2CySsBVq6mCTEwqs2gXHYuADcXl9lC5XQCSPiZbGEtFc";
+            
+            // Get elements
+            const initialForm = document.getElementById('initialForm');
+            const backgroundForm = document.getElementById('backgroundForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            const nextFormBtn = document.getElementById('nextFormBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const newFormBtn = document.getElementById('newFormBtn');
+            
+            // Navigate to background form
+            nextFormBtn.addEventListener('click', function() {
+                // Validate fields
+                const realName = document.getElementById('realName').value.trim();
+                const discordTag = document.getElementById('discordTag').value.trim();
+                const rpExperience = document.getElementById('rpExperience').value.trim();
+                const charName = document.getElementById('charName').value.trim();
+                
+                if (!realName || !discordTag || !rpExperience || !charName) {
+                    alert('Per favore, compila tutti i campi richiesti.');
+                    return;
+                }
+                
+                // Pre-fill character name in the next form
+                document.getElementById('charFullName').value = charName;
+                
+                // Show background form
+                initialForm.classList.remove('active');
+                backgroundForm.classList.add('active');
+            });
+            
+            // Submit the form
+            submitBtn.addEventListener('click', function() {
+                // Get all form data
+                const formData = {
+                    nome_irl: document.getElementById('realName').value.trim(),
+                    discord_tag: document.getElementById('discordTag').value.trim(),
+                    esperienza_roleplay: document.getElementById('rpExperience').value.trim(),
+                    nome_personaggio: document.getElementById('charFullName').value.trim(),
+                    eta_personaggio: document.getElementById('charAge').value.trim(),
+                    luogo_nascita: document.getElementById('birthplace').value.trim(),
+                    background: document.getElementById('background').value.trim(),
+                    motivazione: document.getElementById('motivation').value.trim(),
+                    personalita: document.getElementById('personality').value.trim(),
+                    punti_forza: document.getElementById('strengths').value.trim(),
+                    debolezze: document.getElementById('weaknesses').value.trim()
+                };
+                
+                // Validate all fields
+                for (const key in formData) {
+                    if (!formData[key]) {
+                        alert('Per favore, compila tutti i campi richiesti.');
+                        return;
+                    }
+                }
+                
+                // Send data to webhook
+                const discordPayload = {
+                    embeds: [
+                        {
+                            title: "Nuovo Modulo Whitelist",
+                            color: 0x8d4a2e, // Rust color
+                            fields: [
+                                {
+                                    name: "🏷️ Nome IRL",
+                                    value: formData.nome_irl
+                                },
+                                {
+                                    name: "💬 Discord Tag",
+                                    value: formData.discord_tag
+                                },
+                                {
+                                    name: "📜 Esperienza Roleplay",
+                                    value: formData.esperienza_roleplay
+                                },
+                                {
+                                    name: "🤠 Nome e Cognome del Personaggio",
+                                    value: formData.nome_personaggio
+                                },
+                                {
+                                    name: "Età del Personaggio",
+                                    value: formData.eta_personaggio
+                                },
+                                {
+                                    name: "Luogo di Nascita",
+                                    value: formData.luogo_nascita
+                                },
+                                {
+                                    name: "Background",
+                                    value: formData.background.length > 1024 ? 
+                                        formData.background.substring(0, 1021) + "..." : 
+                                        formData.background
+                                },
+                                {
+                                    name: "Motivazione del Personaggio",
+                                    value: formData.motivazione
+                                },
+                                {
+                                    name: "Carattere e Personalità",
+                                    value: formData.personalita
+                                },
+                                {
+                                    name: "Punti di Forza",
+                                    value: formData.punti_forza
+                                },
+                                {
+                                    name: "Debolezze",
+                                    value: formData.debolezze
+                                }
+                            ],
+                            timestamp: new Date().toISOString()
+                        }
+                    ]
+                };
+                
+                // If background is too long, send a second embed
+                if (formData.background.length > 1024) {
+                    const backgroundContinuation = formData.background.substring(1021);
+                    discordPayload.embeds.push({
+                        title: "Background (continuazione)",
+                        color: 0x8d4a2e,
+                        description: backgroundContinuation
+                    });
+                }
+                
+                // Send data to webhook
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(discordPayload)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Show success message
+                        backgroundForm.classList.remove('active');
+                        successMessage.classList.add('active');
+                        
+                        // Clear form fields
+                        document.querySelectorAll('input, textarea').forEach(input => {
+                            input.value = '';
+                        });
+                    } else {
+                        alert('Si è verificato un errore durante l\'invio. Per favore, riprova più tardi.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    alert('Si è verificato un errore durante l\'invio. Per favore, riprova più tardi.');
+                });
+            });
+            
+            // Reset form
+            newFormBtn.addEventListener('click', function() {
+                successMessage.classList.remove('active');
+                initialForm.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

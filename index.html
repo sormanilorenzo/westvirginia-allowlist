@@ -288,6 +288,81 @@
                 padding: 15px;
             }
         }
+
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-wood);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23331a00' fill-opacity='0.1'/%3E%3Cpath d='M10 10h10v10H10zm30 0h10v10H40zm30 0h10v10H70zM10 40h10v10H10zm30 0h10v10H40zm30 0h10v10H70zM10 70h10v10H10zm30 0h10v10H40zm30 0h10v10H70z' fill='%23331a00' fill-opacity='0.2'/%3E%3C/svg%3E");
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-screen.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading-container {
+            width: 80%;
+            max-width: 500px;
+            background-color: var(--color-paper);
+            border: 8px solid var(--color-wood-dark);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading-title {
+            font-family: 'Rye', cursive;
+            color: var(--color-rust);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 30px;
+            background-color: var(--color-paper-dark);
+            border: 2px solid var(--color-wood-dark);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--color-gold), var(--color-rust));
+            transition: width 0.1s linear;
+            position: relative;
+        }
+
+        .progress-bar:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 10px 10px;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-family: 'Special Elite', cursive;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -384,6 +459,23 @@
             </div>
         </div>
 
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="loading-screen">
+            <div class="loading-container">
+                <h3 class="loading-title">Invio del Modulo in Corso...</h3>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div id="progressText" class="progress-text">Preparazione dei dati... (0%)</div>
+            </div>
+        </div>
+
+        <audio id="loadingMusic" preload="auto">
+            <source src="music.mp3" type="audio/mpeg">
+            <!-- Fallback message if audio isn't supported -->
+            Your browser does not support the audio element.
+        </audio>
+
         <!-- Success Message -->
         <div id="successMessage" class="form-section">
             <div class="telegram">
@@ -402,7 +494,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Imposta qui il tuo webhook fisso
-            const webhookUrl = "https://discord.com/api/webhooks/1345731964493238353/YMpSFbr3GfRv8o1kbBRKOlLW2CySsBVq6mCTEwqs2gXHYuADcXl9lC5XQCSPiZbGEtFc";
+            const webhookUrl = "IMPOSTA_QUI_IL_TUO_WEBHOOK";
             
             // Get elements
             const initialForm = document.getElementById('initialForm');
@@ -622,6 +714,260 @@
                 successMessage.classList.remove('active');
                 initialForm.classList.add('active');
             });
+        });
+
+        // Submit the form
+        submitBtn.addEventListener('click', function() {
+            // Get all form data
+            const formData = {
+                nome_irl: document.getElementById('realName').value.trim(),
+                discord_tag: document.getElementById('discordTag').value.trim(),
+                esperienza_roleplay: document.getElementById('rpExperience').value.trim(),
+                nome_personaggio: document.getElementById('charFullName').value.trim(),
+                eta_personaggio: document.getElementById('charAge').value.trim(),
+                luogo_nascita: document.getElementById('birthplace').value.trim(),
+                background: document.getElementById('background').value.trim(),
+                motivazione: document.getElementById('motivation').value.trim(),
+                personalita: document.getElementById('personality').value.trim(),
+                punti_forza: document.getElementById('strengths').value.trim(),
+                debolezze: document.getElementById('weaknesses').value.trim()
+            };
+            
+            // Validate all fields
+            for (const key in formData) {
+                if (!formData[key]) {
+                    alert('Per favore, compila tutti i campi richiesti.');
+                    return;
+                }
+            }
+            
+            // Nascondi immediatamente il form di background
+            backgroundForm.classList.remove('active');
+            
+            // Show loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            // Get audio element and play it
+            const loadingMusic = document.getElementById('loadingMusic');
+            loadingMusic.currentTime = 0; // Reset the audio to beginning
+            loadingMusic.volume = 0.5; // Set volume to 50%
+            
+            // Play the music
+            loadingMusic.play().catch(err => {
+            console.log('Music could not be played automatically: ', err);
+            // Most browsers require user interaction before playing audio
+            });
+            
+            loadingScreen.classList.add('active');
+            
+            // Simulate progress over 30 seconds
+            let progress = 0;
+            const totalTime = 60000; // 60 seconds
+            const interval = 300; // Update every 300ms
+            const increment = (interval / totalTime) * 100;
+            
+            const updateProgressBar = setInterval(function() {
+                progress += increment;
+                const currentProgress = Math.min(Math.round(progress), 100);
+                
+                progressBar.style.width = currentProgress + '%';
+                
+                // Update loading text based on progress
+                if (currentProgress < 20) {
+                    progressText.textContent = `Preparazione dei dati... (${currentProgress}%)`;
+                } else if (currentProgress < 50) {
+                    progressText.textContent = `Invio delle informazioni in corso... (${currentProgress}%)`;
+                } else if (currentProgress < 80) {
+                    progressText.textContent = `Elaborazione della richiesta... (${currentProgress}%)`;
+                } else {
+                    progressText.textContent = `Completamento dell'operazione... (${currentProgress}%)`;
+                }
+                
+                if (currentProgress >= 100) {
+                    clearInterval(updateProgressBar);
+                    
+                    // Prepare to send actual data
+                    setTimeout(function() {
+                        loadingScreen.classList.remove('active');
+                        loadingMusic.pause(); // Stop the music
+
+                        
+                        // Prendi i dati e crea i payload
+                        createAndSendPayloads();
+                    }, 500);
+                }
+            }, interval);
+
+            // Reset form
+            newFormBtn.addEventListener('click', function() {
+                const loadingMusic = document.getElementById('loadingMusic');
+                loadingMusic.pause(); // Ensure music is stopped
+                
+                successMessage.classList.remove('active');
+                initialForm.classList.add('active');
+            });
+
+            
+            // Funzione per creare e inviare i payload
+            function createAndSendPayloads() {
+                // Funzione per suddividere testi lunghi
+                function splitText(text, maxLength = 1024) {
+                    const chunks = [];
+                    let remainingText = text;
+                    
+                    while (remainingText.length > 0) {
+                        if (remainingText.length <= maxLength) {
+                            chunks.push(remainingText);
+                            break;
+                        }
+                        
+                        // Trova un punto logico dove dividere (spazio, punto, virgola)
+                        let splitIndex = remainingText.lastIndexOf(' ', maxLength);
+                        if (splitIndex === -1) splitIndex = maxLength;
+                        
+                        chunks.push(remainingText.substring(0, splitIndex));
+                        remainingText = remainingText.substring(splitIndex).trim();
+                    }
+                    
+                    return chunks;
+                }
+                
+                // Array di payload per gestire tutti i contenuti
+                const payloads = [];
+                
+                // Primo payload con informazioni principali
+                const mainPayload = {
+                    embeds: [{
+                        title: "Nuovo Modulo Whitelist",
+                        color: 0x8d4a2e, // Rust color
+                        fields: [
+                            { name: "🏷️ Nome IRL", value: formData.nome_irl },
+                            { name: "💬 Discord Tag", value: formData.discord_tag },
+                            { name: "📜 Esperienza Roleplay", value: formData.esperienza_roleplay.length > 1024 ? 
+                                formData.esperienza_roleplay.substring(0, 1000) + "... (continua)" : 
+                                formData.esperienza_roleplay 
+                            },
+                            { name: "🤠 Nome e Cognome del Personaggio", value: formData.nome_personaggio },
+                            { name: "Età del Personaggio", value: formData.eta_personaggio },
+                            { name: "Luogo di Nascita", value: formData.luogo_nascita }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+                
+                payloads.push(mainPayload);
+                
+                // Gestione campi potenzialmente lunghi
+                const longFields = [
+                    { name: "Background", value: formData.background },
+                    { name: "Motivazione del Personaggio", value: formData.motivazione },
+                    { name: "Carattere e Personalità", value: formData.personalita },
+                    { name: "Punti di Forza", value: formData.punti_forza },
+                    { name: "Debolezze", value: formData.debolezze }
+                ];
+                
+                // Se l'esperienza roleplay era troppo lunga, aggiungi il resto
+                if (formData.esperienza_roleplay.length > 1024) {
+                    const chunks = splitText(formData.esperienza_roleplay, 1500);
+                    if (chunks.length > 1) {
+                        payloads.push({
+                            embeds: [{
+                                title: "Esperienza Roleplay (continuazione)",
+                                color: 0x8d4a2e,
+                                description: chunks.slice(1).join("\n\n")
+                            }]
+                        });
+                    }
+                }
+                
+                // Crea embed per ogni campo lungo
+                longFields.forEach(field => {
+                    const chunks = splitText(field.value, 1500);
+                    
+                    if (chunks.length === 1) {
+                        // Se è abbastanza corto, aggiungilo all'ultimo payload
+                        if (payloads[payloads.length - 1].embeds[0].fields && 
+                            payloads[payloads.length - 1].embeds[0].fields.length < 10) {
+                            payloads[payloads.length - 1].embeds[0].fields.push({
+                                name: field.name,
+                                value: field.value
+                            });
+                        } else {
+                            // Altrimenti crea un nuovo payload
+                            payloads.push({
+                                embeds: [{
+                                    title: field.name,
+                                    color: 0x8d4a2e,
+                                    description: field.value
+                                }]
+                            });
+                        }
+                    } else {
+                        // Per testi molto lunghi, crea più payload
+                        payloads.push({
+                            embeds: [{
+                                title: field.name,
+                                color: 0x8d4a2e,
+                                description: chunks[0]
+                            }]
+                        });
+                        
+                        // Se ci sono altri chunk, aggiungi embed continuazione
+                        if (chunks.length > 1) {
+                            for (let i = 1; i < chunks.length; i++) {
+                                payloads.push({
+                                    embeds: [{
+                                        title: `${field.name} (continuazione ${i})`,
+                                        color: 0x8d4a2e,
+                                        description: chunks[i]
+                                    }]
+                                });
+                            }
+                        }
+                    }
+                });
+                
+                // Funzione per inviare i payload in sequenza
+                async function sendPayloads(index = 0) {
+                    if (index >= payloads.length) {
+                        // Tutti i payload sono stati inviati
+                        successMessage.classList.add('active');
+                        
+                        // Clear form fields
+                        document.querySelectorAll('input, textarea').forEach(input => {
+                            input.value = '';
+                        });
+                        return;
+                    }
+                    
+                    try {
+                        const response = await fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(payloads[index])
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Errore HTTP: ${response.status}`);
+                        }
+                        
+                        // Attendi un momento per evitare rate limiting
+                        setTimeout(() => {
+                            sendPayloads(index + 1);
+                        }, 500);
+                    } catch (error) {
+                        console.error('Errore:', error);
+                        alert('Si è verificato un errore durante l\'invio. Per favore, riprova più tardi.');
+                    }
+                }
+                
+                // Inizia l'invio sequenziale
+                sendPayloads();
+            }
         });
     </script>
 </body>
